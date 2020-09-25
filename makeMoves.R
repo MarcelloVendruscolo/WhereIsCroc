@@ -1,11 +1,14 @@
 #List all the packages available
 library()
 
-#List all the packages currently loaded
-search()
+#Install the WheresCroc package
+install.packages("/Users/marcellovendruscolo/Documents/rstudio-workspace/WhereIsCroc/WheresCroc_1.2.2.tar.gz", repos = NULL, type = "source")
 
 #Load DeliveryMan package for this session
 library(WheresCroc)
+
+#List all the packages currently loaded
+search()
 
 #Help function for calculating the observable probabilities (salinity, phosphate and nitrogen) of each waterhole given the observations from Croc's current location
 current_waterholesProbabilites <- function(croc_locationReadings, waterholes_distributions) {
@@ -220,5 +223,8 @@ makeMoves <- function(move_information, croc_locationReadings, humans_location, 
   return(move_information)
 }
 
+#Run one game
 runWheresCroc(makeMoves, doPlot = T, showCroc = T, pause = 1, verbose = T, returnMem = F, mem = NA)
+
+#Run test function checking whether the implementation surpass the par performance
 testWC(makeMoves, verbose = 1, returnVec = FALSE, n = 500, seed = 21, timeLimit = 300)
