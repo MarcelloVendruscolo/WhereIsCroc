@@ -1,2 +1,4 @@
 # WhereIsCroc
-Second assignment of the Artificial Intelligence course (1DL340) at Uppsala University. The concept of hidden Markov models and associated algorithms are exercised in this assignment.
+Second assignment of the Artificial Intelligence course (1DL340) at Uppsala University. The concept of hidden Markov models (HMMs) and associated algorithms are exercised in this assignment.
+
+The task in this assignment is to implement a control system to find out the location of Croc—a crocodile—given a sequence of observable variables (e.g., salinity, phosphate and nitrogen readings of different waterhole). The dynamic probabilities of Croc being at different waterholes is modeled through hidden Markov model. Forward probabilities technique is utilised to estimate the state of Croc at each round. All moves of Croc and tourists are modeled by an uniform distribution. There are also other matters that significantly affect the performance of the game, such as the implementation of a moving algorithm. Examine the package's help documentation for details.
