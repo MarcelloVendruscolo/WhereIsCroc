@@ -1,19 +1,10 @@
-#List all the packages available
-library()
-
-#Install the WheresCroc package
-install.packages("/Users/marcellovendruscolo/Documents/rstudio-workspace/WhereIsCroc/WheresCroc_1.2.2.tar.gz", repos = NULL, type = "source")
+# install.packages("/WheresCroc_1.2.2.tar.gz", repos = NULL, type = "source")
 
 #Load DeliveryMan package for this session
 library(WheresCroc)
 
-#List all the packages currently loaded
-search()
-
 #Help function for calculating the observable probabilities (salinity, phosphate and nitrogen) of each waterhole given the observations from Croc's current location
 current_waterholesProbabilites <- function(croc_locationReadings, waterholes_distributions) {
-  
-  observation_matrix <- matrix(data = 0, nrow = 40, ncol = 40)
   
   sum_salinity <- 0
   sum_phosphate <- 0
@@ -35,6 +26,8 @@ current_waterholesProbabilites <- function(croc_locationReadings, waterholes_dis
     nitrogen_normalisedProbabilities[i] <- (dnorm(croc_locationReadings[3], waterholes_distributions$nitrogen[i,1], waterholes_distributions$nitrogen[i,2]) / sum_nitrogen)
   }
   
+  observation_matrix <- matrix(data = 0, nrow = 40, ncol = 40)
+  
   for (diagonal in 1:40) {
     observation_matrix[diagonal,diagonal] <- (salinity_normalisedProbabilities[diagonal] * phosphate_normalisedProbabilities[diagonal] * nitrogen_normalisedProbabilities[diagonal])
   }
@@ -45,13 +38,14 @@ current_waterholesProbabilites <- function(croc_locationReadings, waterholes_dis
 #Help function to calculate the transition matrix considering a uniform distribution
 compute_transitionMatrix <- function(edges_matrix) {
   
-  transitionProbabilities_Matrix <- matrix(0, nrow = 40, ncol = 40)
   counter_neighbours <- seq(1, 1, length.out = 40)
 
   for (i in 1:dim(edges_matrix)[1]) {
     counter_neighbours[edges_matrix[i,1]] <- counter_neighbours[edges_matrix[i,1]] + 1
     counter_neighbours[edges_matrix[i,2]] <- counter_neighbours[edges_matrix[i,2]] + 1
   }
+  
+  transitionProbabilities_Matrix <- matrix(0, nrow = 40, ncol = 40)
   
   for (i in 1:dim(edges_matrix)[1]) {
     transitionProbabilities_Matrix[edges_matrix[i,1],edges_matrix[i,1]] <- (1 / counter_neighbours[edges_matrix[i,1]])
@@ -201,17 +195,14 @@ makeMoves <- function(move_information, croc_locationReadings, humans_location, 
     }
   }
   
-  #cat("Most probable waterhole: ", most_probable_waterhole, "\n")
-  
   #Computes the next 2 moves based on current location, destination waterhole and edges connecting waterholes
   move_information$moves <- calculate_shortestPath(humans_location[3], most_probable_waterhole, edges_matrix)
   
-  #If one of the moves is to search, the probability of such waterhole can be updated to zero
-  #Croc will certainly not be there is the game proceeds to the next round
+  #If one of the moves is to search, the probability of such waterhole can be updated to zero as Croc will certainly not be there if the game proceeds to the next round.
   if (move_information$moves[2] == 0) {
     waterholes[1,move_information$moves[1]] <- 0
   }
-
+  
   #Store information in memory for access during the upcoming round
   move_information$mem$waterholesProbabilities <- waterholes
   
@@ -219,7 +210,7 @@ makeMoves <- function(move_information, croc_locationReadings, humans_location, 
   if (move_information$mem$status == 0 | move_information$mem$status == 1) {
     move_information$mem$status <- -1
   }
-
+  
   return(move_information)
 }
 
